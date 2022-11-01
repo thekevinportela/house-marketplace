@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link, useNavigate, useNavigation } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { ReactComponent as ArrowRightIcon } from "../assets/svg/keyboardArrowRightIcon.svg";
 import visibilityIcon from "../assets/svg/visibilityIcon.svg";
 import {
@@ -10,6 +10,7 @@ import {
 import { setDoc, doc, serverTimestamp } from "firebase/firestore";
 import { db } from "../firebase.config";
 import { toast } from "react-toastify";
+import OAuth from "../components/OAuth";
 
 const Signup = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -99,18 +100,15 @@ const Signup = () => {
                 onClick={() => setShowPassword(!showPassword)}
               />
             </div>
-            <Link to="/forgot-password" className="forgotPasswordLink">
-              Forgot Password
-            </Link>
 
             <div className="signUpBar">
-              <p className="signUpText">Sign In</p>
+              <p className="signUpText">Sign Up</p>
               <button className="signUpButton">
                 <ArrowRightIcon fill="#ffffff" width="34px" height="34px" />
               </button>
             </div>
           </form>
-          {/* Google OAuth */}
+          <OAuth />
           <Link to="/signin" className="registerLink">
             Sign In Instead
           </Link>
