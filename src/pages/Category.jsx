@@ -37,14 +37,12 @@ const Category = () => {
 
         // Execute query
         const querySnap = await getDocs(q);
-        console.log(querySnap.docs);
         const lastVisible = querySnap.docs[querySnap.docs.length - 1];
         setLastFetchedListing(lastVisible);
 
         const listings = [];
 
         querySnap.forEach((doc) => {
-          // console.log("DATA", doc.data());
           return listings.push({
             id: doc.id,
             data: doc.data(),
@@ -53,7 +51,6 @@ const Category = () => {
 
         setListings(listings);
         setLoading(false);
-        // console.log("LSITINGS: ", listings[0].data.imgUrls[0]);
       } catch (error) {
         toast.error("Could not fetch listings.");
       }
@@ -78,14 +75,12 @@ const Category = () => {
 
       // Execute query
       const querySnap = await getDocs(q);
-      console.log(querySnap.docs);
       const lastVisible = querySnap.docs[querySnap.docs.length - 1];
       setLastFetchedListing(lastVisible);
 
       const listings = [];
 
       querySnap.forEach((doc) => {
-        // console.log("DATA", doc.data());
         return listings.push({
           id: doc.id,
           data: doc.data(),
@@ -94,7 +89,6 @@ const Category = () => {
 
       setListings((prevState) => [...prevState, ...listings]);
       setLoading(false);
-      // console.log("LSITINGS: ", listings[0].data.imgUrls[0]);
     } catch (error) {
       toast.error("Could not fetch listings.");
     }

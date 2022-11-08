@@ -31,7 +31,6 @@ const Slider = () => {
           data: doc.data(),
         });
       });
-      console.log(listings.imgUrls);
       setListings(listings);
       setLoading(false);
     };

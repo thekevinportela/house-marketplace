@@ -22,7 +22,6 @@ const Contact = () => {
       } else {
         toast.error("Could not get landlord data");
       }
-      console.log("Landlord: ", landlord);
     };
 
     getLandlord();

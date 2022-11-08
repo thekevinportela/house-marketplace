@@ -135,7 +135,6 @@ const EditListing = () => {
         data.status === "ZERO_RESULTS"
           ? undefined
           : data.results[0]?.formatted_address;
-      console.log(data);
 
       if (location === undefined || location.includes("undefined")) {
         setLoading(false);
@@ -194,7 +193,6 @@ const EditListing = () => {
     ).catch((e) => {
       setLoading(false);
       toast.error("Images could not be uploaded");
-      console.log("IMAGES ERROR: ", e);
       return;
     });
 
