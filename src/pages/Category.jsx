@@ -12,10 +12,12 @@ import {
 import { db } from "../firebase.config";
 import { toast } from "react-toastify";
 import Spinner from "../components/Spinner";
+import ListingItem from "../components/ListingItem";
 
 const Category = () => {
   const [listings, setListings] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [lastFetchedListing, setLastFetchedListing] = useState(null);
 
   const params = useParams();
 
@@ -35,6 +37,9 @@ const Category = () => {
 
         // Execute query
         const querySnap = await getDocs(q);
+        console.log(querySnap.docs);
+        const lastVisible = querySnap.docs[querySnap.docs.length - 1];
+        setLastFetchedListing(lastVisible);
 
         const listings = [];
 
@@ -48,13 +53,52 @@ const Category = () => {
 
         setListings(listings);
         setLoading(false);
-        // console.log("LSITINGS: ", listings);
+        // console.log("LSITINGS: ", listings[0].data.imgUrls[0]);
       } catch (error) {
         toast.error("Could not fetch listings.");
       }
     };
     fetchListings();
   }, [params.categoryName]);
+
+  // Pagination
+  const onFetchMoreListings = async () => {
+    try {
+      // Get a reference
+      const listingsRef = collection(db, "listings");
+
+      // Create a query
+      const q = query(
+        listingsRef,
+        where("type", "==", params.categoryName),
+        orderBy("timestamp", "desc"),
+        startAfter(lastFetchedListing),
+        limit(10)
+      );
+
+      // Execute query
+      const querySnap = await getDocs(q);
+      console.log(querySnap.docs);
+      const lastVisible = querySnap.docs[querySnap.docs.length - 1];
+      setLastFetchedListing(lastVisible);
+
+      const listings = [];
+
+      querySnap.forEach((doc) => {
+        // console.log("DATA", doc.data());
+        return listings.push({
+          id: doc.id,
+          data: doc.data(),
+        });
+      });
+
+      setListings((prevState) => [...prevState, ...listings]);
+      setLoading(false);
+      // console.log("LSITINGS: ", listings[0].data.imgUrls[0]);
+    } catch (error) {
+      toast.error("Could not fetch listings.");
+    }
+  };
 
   return (
     <div className="category">
@@ -73,10 +117,21 @@ const Category = () => {
           <main>
             <ul className="categoryListings">
               {listings.map((listing) => (
-                <h3>{listing.data.name}</h3>
+                <ListingItem
+                  listing={listing.data}
+                  id={listing.id}
+                  key={listing.id}
+                />
               ))}
             </ul>
           </main>
+          <br />
+          <br />
+          {lastFetchedListing && (
+            <p className="loadMore" onClick={onFetchMoreListings}>
+              Load More
+            </p>
+          )}
         </>
       ) : (
         <p>No listings for {params.categoryName}</p>
